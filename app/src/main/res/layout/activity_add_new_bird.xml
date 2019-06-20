@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:inputType="textMultiLine"
             android:ems="10" android:layout_margin="16dp"
-            android:id="@+id/notes_editText" android:layout_weight="1" android:hint="@string/notes"/>
+            android:id="@+id/notesEditText" android:layout_weight="1" android:hint="@string/notes"/>
     <Button
             android:text="@string/save"
             android:layout_width="wrap_content" android:layout_margin="16dp"

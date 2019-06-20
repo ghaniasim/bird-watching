@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
+import android.text.TextUtils
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -60,20 +61,24 @@ class AddNewBird : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     }
 
     private fun saveNewBird() {
-        val name = nameEditText.text.toString()
-        var notes = notes_editText.text.toString()
-        val item = BirdsListItem(0, name, date, rarityOption, notes)
-        val handler = Handler(Handler.Callback {
-            Toast.makeText(applicationContext, it.data.getString("message"), Toast.LENGTH_SHORT).show()
-            true
-        })
-        Thread(Runnable {
-            val id = database.birdsListDao().insert(item)
-            item.id = id.toInt()
-            val message = Message.obtain()
-            message.data.putString("message", "Bird added to database!")
-            handler.sendMessage(message)
-        }).start()
-        finish()
+        if (TextUtils.isEmpty(nameEditText.text)) {
+            Toast.makeText(this, "Please enter bird's name", Toast.LENGTH_SHORT).show()
+        } else {
+            val name = nameEditText.text.toString()
+            var notes = notesEditText.text.toString()
+            val item = BirdsListItem(0, name, date, rarityOption, notes)
+            val handler = Handler(Handler.Callback {
+                Toast.makeText(applicationContext, it.data.getString("message"), Toast.LENGTH_SHORT).show()
+                true
+            })
+            Thread(Runnable {
+                val id = database.birdsListDao().insert(item)
+                item.id = id.toInt()
+                val message = Message.obtain()
+                message.data.putString("message", "Bird added to database!")
+                handler.sendMessage(message)
+            }).start()
+            finish()
+        }
     }
 }
