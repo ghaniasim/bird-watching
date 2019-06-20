@@ -66,6 +66,9 @@ class AddNewBird : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         } else {
             val name = nameEditText.text.toString()
             var notes = notesEditText.text.toString()
+            if (TextUtils.isEmpty(notesEditText.text)){
+                notes = getString(R.string.no_notes)
+            }
             val item = BirdsListItem(0, name, date, rarityOption, notes)
             val handler = Handler(Handler.Callback {
                 Toast.makeText(applicationContext, it.data.getString("message"), Toast.LENGTH_SHORT).show()
