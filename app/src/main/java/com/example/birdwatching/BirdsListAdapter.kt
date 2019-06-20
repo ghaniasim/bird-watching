@@ -22,11 +22,15 @@ class BirdsListAdapter(var birdsList: MutableList<BirdsListItem>) :
         val item: BirdsListItem = birdsList[position]
         holder.nameTextView.text = item.name
         holder.dateTextView.text = item.date
+        holder.rareTextView.text = item.rarity
+        holder.notesTextView.text = item.notes
     }
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val nameTextView: TextView = view.nameTextView
         val dateTextView: TextView = view.dateTextView
+        val rareTextView: TextView = view.rareTextView
+        val notesTextView: TextView = view.notesTextView
     }
 
     fun update(newList: MutableList<BirdsListItem>) {

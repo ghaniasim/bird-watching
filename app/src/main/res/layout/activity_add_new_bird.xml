@@ -6,10 +6,20 @@
         android:layout_margin="8dp">
     <EditText
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:inputType="textPersonName"
             android:ems="10" android:layout_margin="16dp"
             android:id="@+id/nameEditText" android:layout_weight="1" android:hint="@string/name"/>
+    <Spinner
+            android:layout_width="wrap_content" android:layout_margin="16dp"
+            android:layout_height="wrap_content" android:id="@+id/spinner"
+            android:entries="@array/rarities"/>
+    <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:ems="10" android:layout_margin="16dp"
+            android:id="@+id/notesEditText" android:layout_weight="1" android:hint="@string/notes"/>
     <Button
             android:text="@string/save"
             android:layout_width="wrap_content" android:layout_margin="16dp"
