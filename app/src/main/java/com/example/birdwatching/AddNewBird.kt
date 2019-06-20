@@ -8,20 +8,30 @@ import android.os.Message
 import android.widget.Button
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_add_new_bird.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 class AddNewBird : AppCompatActivity() {
 
     private lateinit var database: BirdsListRoomDatabase
+    private lateinit var date: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_new_bird)
         initialiseDatabase()
+        date = getTimeStamp()
         val saveButton = findViewById<Button>(R.id.saveButton)
         saveButton.setBackgroundColor(getColor(R.color.colorPrimary))
         saveButton.setOnClickListener {
             saveNewBird()
         }
+    }
+
+    private fun getTimeStamp(): String {
+        var rawDate = Date()
+        val formatter = SimpleDateFormat("MMM dd yyyy HH:mm")
+        return formatter.format(rawDate)
     }
 
     private fun initialiseDatabase() {
@@ -30,7 +40,7 @@ class AddNewBird : AppCompatActivity() {
 
     private fun saveNewBird() {
         val name = nameEditText.text.toString()
-        val item = BirdsListItem(0, name)
+        val item = BirdsListItem(0, name, date)
         val handler = Handler(Handler.Callback {
             Toast.makeText(applicationContext, it.data.getString("message"), Toast.LENGTH_SHORT).show()
             true

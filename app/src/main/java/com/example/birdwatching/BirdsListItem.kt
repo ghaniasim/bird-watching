@@ -7,6 +7,6 @@ import android.arch.persistence.room.PrimaryKey
 data class BirdsListItem (
     @PrimaryKey(autoGenerate = true)
     var id: Int,
-    var name: String?
-
+    var name: String?,
+    var date: String
 )

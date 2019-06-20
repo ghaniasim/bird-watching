@@ -21,10 +21,12 @@ class BirdsListAdapter(var birdsList: MutableList<BirdsListItem>) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item: BirdsListItem = birdsList[position]
         holder.nameTextView.text = item.name
+        holder.dateTextView.text = item.date
     }
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val nameTextView: TextView = view.nameTextView
+        val dateTextView: TextView = view.dateTextView
     }
 
     fun update(newList: MutableList<BirdsListItem>) {
