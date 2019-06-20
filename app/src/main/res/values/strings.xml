@@ -4,4 +4,6 @@
     <string name="name">Name</string>
     <string name="save">Save</string>
     <string name="date">Date</string>
+    <string name="notes">Notes</string>
+    <string name="bird_image">Image of a bird</string>
 </resources>

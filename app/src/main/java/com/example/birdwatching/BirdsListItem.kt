@@ -9,5 +9,6 @@ data class BirdsListItem (
     var id: Int,
     var name: String?,
     var date: String,
-    var rarity: String? = null
+    var rarity: String? = null,
+    var notes: String? = null
 )
