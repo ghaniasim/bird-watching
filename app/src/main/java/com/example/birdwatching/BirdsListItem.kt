@@ -8,5 +8,6 @@ data class BirdsListItem (
     @PrimaryKey(autoGenerate = true)
     var id: Int,
     var name: String?,
-    var date: String
+    var date: String,
+    var rarity: String? = null
 )
