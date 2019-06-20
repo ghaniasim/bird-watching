@@ -1,0 +1,34 @@
+package com.example.birdwatching
+
+import android.support.v7.widget.RecyclerView
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import kotlinx.android.synthetic.main.recyclerview_item.view.*
+
+class BirdsListAdapter(var birdsList: MutableList<BirdsListItem>) :
+    RecyclerView.Adapter<BirdsListAdapter.ViewHolder>() {
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val layoutInflater = LayoutInflater.from(parent.context)
+        val view = layoutInflater.inflate(R.layout.recyclerview_item, parent, false)
+        return ViewHolder(view)
+    }
+
+    override fun getItemCount(): Int = birdsList.size
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val item: BirdsListItem = birdsList[position]
+        holder.nameTextView.text = item.name
+    }
+
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val nameTextView: TextView = view.nameTextView
+    }
+
+    fun update(newList: MutableList<BirdsListItem>) {
+        birdsList = newList
+        notifyDataSetChanged()
+    }
+}
