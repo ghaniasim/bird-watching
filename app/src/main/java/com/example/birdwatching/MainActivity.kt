@@ -8,6 +8,7 @@ import android.os.Message
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.Toast
 
@@ -18,6 +19,7 @@ class MainActivity : AppCompatActivity() {
     private var birdsList: MutableList<BirdsListItem> = ArrayList()
     private lateinit var adapter: BirdsListAdapter
     private lateinit var database: BirdsListRoomDatabase
+    private var isAscending: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,7 +52,11 @@ class MainActivity : AppCompatActivity() {
             true
         })
         Thread(Runnable {
-            birdsList = database.birdsListDao().getAll()
+            if (isAscending) {
+                birdsList = database.birdsListDao().getAllOrderByDateAsc()
+            } else {
+                birdsList = database.birdsListDao().getAllOrderByDateDesc()
+            }
             val message = Message.obtain()
             if (birdsList.size > 0)
                 message.data.putString("message", "Birds list is refreshed")
@@ -67,8 +73,16 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.action_settings -> true
+            R.id.action_sort -> {
+                reverseSortingOrder()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun reverseSortingOrder() {
+        isAscending = !isAscending
+        loadBirdsListItems()
     }
 }
