@@ -7,6 +7,8 @@ import android.os.Handler
 import android.os.Message
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -34,6 +36,7 @@ class MainActivity : AppCompatActivity() {
         adapter = BirdsListAdapter(birdsList)
         recyclerViewBirdsList.adapter = adapter
         loadBirdsListItems()
+        initSwipe()
     }
 
     public override fun onResume() {
@@ -84,5 +87,31 @@ class MainActivity : AppCompatActivity() {
     private fun reverseSortingOrder() {
         isAscending = !isAscending
         loadBirdsListItems()
+    }
+
+    private fun initSwipe() {
+        val simpleItemTouchCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.adapterPosition
+                val handler = Handler(Handler.Callback {
+                    Toast.makeText(applicationContext, it.data.getString("message"), Toast.LENGTH_SHORT).show()
+                    adapter.update(birdsList)
+                    true
+                })
+                var id = birdsList[position].id
+                birdsList.removeAt(position)
+                Thread(Runnable {
+                    database.birdsListDao().delete(id)
+                    val message = Message.obtain()
+                    message.data.putString("message", "Bird deleted from database!")
+                    handler.sendMessage(message)
+                }).start()
+            }
+            override fun onMove(p0: RecyclerView, p1: RecyclerView.ViewHolder, p2: RecyclerView.ViewHolder): Boolean {
+                return false
+            }
+        }
+        val itemTouchHelper = ItemTouchHelper(simpleItemTouchCallback)
+        itemTouchHelper.attachToRecyclerView(recyclerViewBirdsList)
     }
 }
