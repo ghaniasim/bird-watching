@@ -7,4 +7,6 @@
     <string name="notes">Notes</string>
     <string name="no_notes">No notes were added.</string>
     <string name="bird_image">Image of a bird</string>
+    <string name="sort">Sort</string>
+    <string name="add_image">Add Image</string>
 </resources>

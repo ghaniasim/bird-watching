@@ -7,7 +7,10 @@ import android.os.Handler
 import android.os.Message
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.Toast
 
@@ -18,6 +21,7 @@ class MainActivity : AppCompatActivity() {
     private var birdsList: MutableList<BirdsListItem> = ArrayList()
     private lateinit var adapter: BirdsListAdapter
     private lateinit var database: BirdsListRoomDatabase
+    private var isAscending: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +36,7 @@ class MainActivity : AppCompatActivity() {
         adapter = BirdsListAdapter(birdsList)
         recyclerViewBirdsList.adapter = adapter
         loadBirdsListItems()
+        initSwipe()
     }
 
     public override fun onResume() {
@@ -50,7 +55,11 @@ class MainActivity : AppCompatActivity() {
             true
         })
         Thread(Runnable {
-            birdsList = database.birdsListDao().getAll()
+            if (isAscending) {
+                birdsList = database.birdsListDao().getAllOrderByDateAsc()
+            } else {
+                birdsList = database.birdsListDao().getAllOrderByDateDesc()
+            }
             val message = Message.obtain()
             if (birdsList.size > 0)
                 message.data.putString("message", "Birds list is refreshed")
@@ -67,8 +76,42 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.action_settings -> true
+            R.id.action_sort -> {
+                reverseSortingOrder()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun reverseSortingOrder() {
+        isAscending = !isAscending
+        loadBirdsListItems()
+    }
+
+    private fun initSwipe() {
+        val simpleItemTouchCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.adapterPosition
+                val handler = Handler(Handler.Callback {
+                    Toast.makeText(applicationContext, it.data.getString("message"), Toast.LENGTH_SHORT).show()
+                    adapter.update(birdsList)
+                    true
+                })
+                var id = birdsList[position].id
+                birdsList.removeAt(position)
+                Thread(Runnable {
+                    database.birdsListDao().delete(id)
+                    val message = Message.obtain()
+                    message.data.putString("message", "Bird deleted from database!")
+                    handler.sendMessage(message)
+                }).start()
+            }
+            override fun onMove(p0: RecyclerView, p1: RecyclerView.ViewHolder, p2: RecyclerView.ViewHolder): Boolean {
+                return false
+            }
+        }
+        val itemTouchHelper = ItemTouchHelper(simpleItemTouchCallback)
+        itemTouchHelper.attachToRecyclerView(recyclerViewBirdsList)
     }
 }

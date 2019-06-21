@@ -10,5 +10,6 @@ data class BirdsListItem (
     var name: String?,
     var date: String,
     var rarity: String? = null,
-    var notes: String? = null
+    var notes: String? = null,
+    var file: String? = null
 )
