@@ -3,6 +3,7 @@ package com.example.birdwatching
 import android.app.Activity
 import android.arch.persistence.room.Room
 import android.content.Intent
+import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -100,6 +101,10 @@ class AddNewBird : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             var notes = notesEditText.text.toString()
             if (TextUtils.isEmpty(notesEditText.text)){
                 notes = getString(R.string.no_notes)
+            }
+            if (imageFilePath.equals("")) {
+                imageFilePath = Uri.parse("android.resource://com.example.birdwatching/"
+                        + R.drawable.no_image).toString()
             }
             val item = BirdsListItem(0, name, date, rarityOption, notes, imageFilePath)
             val handler = Handler(Handler.Callback {
