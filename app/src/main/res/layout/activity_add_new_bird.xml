@@ -20,9 +20,19 @@
             android:inputType="textMultiLine"
             android:ems="10" android:layout_margin="16dp"
             android:id="@+id/notesEditText" android:layout_weight="1" android:hint="@string/notes"/>
-    <Button
-            android:text="@string/save"
-            android:layout_width="wrap_content" android:layout_margin="16dp"
-            android:layout_height="wrap_content" android:id="@+id/saveButton" android:layout_weight="1"
-            android:textColor="@color/icons"/>
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" android:layout_weight="1">
+        <Button
+                android:text="@string/save"
+                android:layout_width="wrap_content" android:layout_margin="16dp"
+                android:layout_height="wrap_content" android:id="@+id/saveButton" android:layout_weight="1"
+                android:textColor="@color/icons"/>
+        <Button
+                android:text="@string/add_image"
+                android:layout_width="wrap_content" android:layout_margin="16dp"
+                android:layout_height="wrap_content" android:id="@+id/addImageButton" android:layout_weight="1"
+                android:textColor="@color/icons"/>
+    </LinearLayout>
 </LinearLayout>

@@ -1,6 +1,8 @@
 package com.example.birdwatching
 
+import android.app.Activity
 import android.arch.persistence.room.Room
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -11,6 +13,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Toast
+import com.github.dhaval2404.imagepicker.ImagePicker
 import kotlinx.android.synthetic.main.activity_add_new_bird.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -20,6 +23,7 @@ class AddNewBird : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     private lateinit var database: BirdsListRoomDatabase
     private lateinit var date: String
     private var rarityOption: String = ""
+    private var imageFilePath: String? = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +35,11 @@ class AddNewBird : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         saveButton.setOnClickListener {
             saveNewBird()
         }
+        val imageButton = findViewById<Button>(R.id.addImageButton)
+        imageButton.setBackgroundColor(getColor(R.color.colorPrimary))
+        imageButton.setOnClickListener {
+            getImageFromUser()
+        }
         ArrayAdapter.createFromResource(
             this,
             R.array.rarities,
@@ -40,6 +49,29 @@ class AddNewBird : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             spinner.adapter = adapter
         }
         spinner.onItemSelectedListener = this
+    }
+
+    private fun getImageFromUser() {
+        ImagePicker.with(this)
+            .crop(1f, 1f)
+            .compress(1024)
+            .maxResultSize(500, 500)
+            .start()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        var filePath: String? =""
+
+        if (resultCode == Activity.RESULT_OK) {
+            filePath = ImagePicker.getFilePath(data)
+            Toast.makeText(this, "Image included", Toast.LENGTH_LONG).show()
+        } else if (resultCode == ImagePicker.RESULT_ERROR) {
+            Toast.makeText(this, ImagePicker.getError(data), Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(this, "Task Cancelled", Toast.LENGTH_SHORT).show()
+        }
+        imageFilePath = filePath
     }
 
     override fun onNothingSelected(p0: AdapterView<*>?) {
@@ -69,7 +101,7 @@ class AddNewBird : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             if (TextUtils.isEmpty(notesEditText.text)){
                 notes = getString(R.string.no_notes)
             }
-            val item = BirdsListItem(0, name, date, rarityOption, notes)
+            val item = BirdsListItem(0, name, date, rarityOption, notes, imageFilePath)
             val handler = Handler(Handler.Callback {
                 Toast.makeText(applicationContext, it.data.getString("message"), Toast.LENGTH_SHORT).show()
                 true
