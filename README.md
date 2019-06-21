@@ -11,6 +11,9 @@ It was challenging but fun to make this app as it includes combination of skills
 
 ## Screenshots
 
+<image src="screenshots/listView.jpeg" width=300>    <image src="screenshots/addNewBird.jpeg" width=300>
+    <image src="screenshots/cameraOptions.jpeg" width=300>    
+
 ## How to Install/ Run via Github on Android Studio 
 
 1. Clone or download the project on your local machine via following link
