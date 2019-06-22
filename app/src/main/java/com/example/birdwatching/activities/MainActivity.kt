@@ -25,8 +25,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var birdViewModel: BirdViewModel
     private lateinit var adapter: BirdsListAdapter
 
-    val liveDataSwitch = MutableLiveData<Boolean>()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
