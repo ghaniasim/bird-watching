@@ -36,6 +36,8 @@ https://github.com/ghaniasim/bird-watching.git
 ## Dependencies
 
 ```
+apply plugin: 'kotlin-kapt'
+
 implementation "com.android.support:support-core-utils:28.0.0"
 implementation 'com.github.dhaval2404:imagepicker-support:1.1'
 
