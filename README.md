@@ -28,7 +28,7 @@ https://github.com/ghaniasim/bird-watching.git
 
 1. Download the `apk` file from the following link
 
-    https://www.
+    https://github.com/ghaniasim/bird-watching/raw/development/apk/bird-watching.apk
 
 2. Install on your device
 3. Allow installation from "unknown sources" from your device settings
