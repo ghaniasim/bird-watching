@@ -1,5 +1,7 @@
 package com.example.birdwatching
 
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.arch.persistence.room.Room
 import android.content.Intent
 import android.os.Bundle
@@ -10,7 +12,6 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.Toast
 
@@ -18,6 +19,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var birdViewModel: BirdViewModel
     private var birdsList: MutableList<BirdsListItem> = ArrayList()
     private lateinit var adapter: BirdsListAdapter
     private lateinit var database: BirdsListRoomDatabase
@@ -27,7 +30,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
-        initialiseDatabase()
+     //   initialiseDatabase()
         fab_add_new_bird.setOnClickListener { view ->
             val intent = Intent(this@MainActivity, AddNewBird::class.java)
             startActivityForResult(intent, 1)
@@ -35,20 +38,23 @@ class MainActivity : AppCompatActivity() {
         recyclerViewBirdsList.layoutManager = LinearLayoutManager(this)
         adapter = BirdsListAdapter(birdsList)
         recyclerViewBirdsList.adapter = adapter
-        loadBirdsListItems()
+        //loadBirdsListItems()
+        birdViewModel = ViewModelProviders.of(this).get(BirdViewModel::class.java)
+        birdViewModel.birdItems.observe(this, object : Observer<List<BirdsListItem>> {
+            override fun onChanged(t: List<BirdsListItem>?) {
+                if (birdsList.isNotEmpty())
+                    birdsList.clear()
+                birdsList.addAll(t!!)
+            }
+        })
         initSwipe()
     }
 
-    public override fun onResume() {
-        super.onResume()
-        loadBirdsListItems()
-    }
-
     private fun initialiseDatabase() {
-        database = Room.databaseBuilder(applicationContext, BirdsListRoomDatabase::class.java, "hs_db").build()
+       database = Room.databaseBuilder(applicationContext, BirdsListRoomDatabase::class.java, "hs_db").build()
     }
 
-    private fun loadBirdsListItems() {
+  /*  private fun loadBirdsListItems() {
         val handler = Handler(Handler.Callback {
             Toast.makeText(applicationContext, it.data.getString("message"), Toast.LENGTH_SHORT).show()
             adapter.update(birdsList)
@@ -68,7 +74,7 @@ class MainActivity : AppCompatActivity() {
             handler.sendMessage(message)
         }).start()
     }
-
+*/
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
@@ -86,7 +92,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun reverseSortingOrder() {
         isAscending = !isAscending
-        loadBirdsListItems()
+        //loadBirdsListItems()
     }
 
     private fun initSwipe() {
