@@ -33,20 +33,30 @@ https://github.com/ghaniasim/bird-watching.git
 2. Install on your device
 3. Allow installation from "unknown sources" from your device settings
 
-## Automated testing
-
--
--
--
-
 ## Dependencies
 
 ```
-implementation "com.android.support:support-core-utils:28.0.0"
-```
+apply plugin: 'kotlin-kapt'
 
-```
+implementation "com.android.support:support-core-utils:28.0.0"
 implementation 'com.github.dhaval2404:imagepicker-support:1.1'
+
+def room_version = "1.1.1"
+implementation "android.arch.persistence.room:runtime:$room_version"
+kapt "android.arch.persistence.room:compiler:$room_version"
+annotationProcessor 'android.arch.persistence.room:compiler:1.1.1'
+implementation 'android.arch.lifecycle:viewmodel:1.1.1'
+annotationProcessor 'android.arch.lifecycle:compiler:1.1.1'
+implementation 'com.android.support:recyclerview-v7:28.0.0'
+implementation 'android.arch.lifecycle:viewmodel:1.1.1'
+annotationProcessor 'android.arch.lifecycle:compiler:1.1.1'
+implementation 'android.arch.lifecycle:extensions:1.1.1'
+
+implementation "android.arch.lifecycle:extensions:1.1.1"
+kapt "android.arch.lifecycle:compiler:1.1.1"
+
+implementation "android.arch.persistence.room:runtime:$room_version"
+kapt "android.arch.persistence.room:compiler:$room_version"
 ```
 
 ```

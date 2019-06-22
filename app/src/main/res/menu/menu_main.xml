@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools"
-      tools:context="com.example.birdwatching.MainActivity">
+      tools:context="com.example.birdwatching.activities.MainActivity">
     <item
             android:id="@+id/action_sort"
             android:icon="@drawable/ic_sort_white_36dp"
