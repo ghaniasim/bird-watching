@@ -8,14 +8,19 @@ import com.example.birdwatching.data.BirdsRepository
 
 class BirdViewModel (application: Application): AndroidViewModel(application) {
     private var repository: BirdsRepository = BirdsRepository(application)
-    private var allBirds: LiveData<List<BirdsListItem>> = repository.getAllBirdsDesc()
+    private var allBirdsDesc: LiveData<List<BirdsListItem>> = repository.getAllBirdsDesc()
+    private var allBirdsAsc: LiveData<List<BirdsListItem>> = repository.getAllBirdsAsc()
 
     fun insert(bird: BirdsListItem) {
         repository.insert(bird)
     }
 
-    fun getAllBirds(): LiveData<List<BirdsListItem>> {
-        return allBirds
+    fun getAllBirdsDesc(): LiveData<List<BirdsListItem>> {
+        return allBirdsDesc
+    }
+
+    fun getAllBirdsAsc(): LiveData<List<BirdsListItem>> {
+        return allBirdsAsc
     }
 
     fun delete(id: Int) {

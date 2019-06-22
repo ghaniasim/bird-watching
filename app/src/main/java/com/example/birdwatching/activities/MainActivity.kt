@@ -21,9 +21,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 
 class MainActivity : AppCompatActivity() {
-    companion object {
-        var isAscending: Boolean = true
-    }
+    private var isAscending: Boolean = true
     private lateinit var birdViewModel: BirdViewModel
     private lateinit var adapter: BirdsListAdapter
 
@@ -42,7 +40,7 @@ class MainActivity : AppCompatActivity() {
         recyclerViewBirdsList.adapter = adapter
 
         birdViewModel = ViewModelProviders.of(this).get(BirdViewModel::class.java)
-        birdViewModel.getAllBirds().observe(this,
+        birdViewModel.getAllBirdsDesc().observe(this,
             Observer<List<BirdsListItem>> { t -> adapter.update((t as MutableList<BirdsListItem>?)!!) })
 
         initSwipe()
@@ -56,6 +54,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_sort -> {
+                isAscending = !isAscending
                 reverseSortingOrder()
                 true
             }
@@ -64,15 +63,24 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun reverseSortingOrder() {
-        isAscending = !isAscending
+        if(isAscending) {
+            birdViewModel.getAllBirdsDesc().observe(this,
+                Observer<List<BirdsListItem>> { t -> adapter.update((t as MutableList<BirdsListItem>?)!!) })
+        }else {
+            birdViewModel.getAllBirdsAsc().observe(this,
+                Observer<List<BirdsListItem>> { t -> adapter.update((t as MutableList<BirdsListItem>?)!!) })
+        }
     }
 
     private fun initSwipe() {
         val simpleItemTouchCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
-                var id = birdViewModel.getAllBirds().value!![position]?.id
-                birdViewModel.delete(id)
+                if(isAscending) {
+                    birdViewModel.delete(birdViewModel.getAllBirdsDesc().value!![position]?.id)
+                } else {
+                    birdViewModel.delete(birdViewModel.getAllBirdsAsc().value!![position]?.id)
+                }
             }
 
             override fun onMove(p0: RecyclerView, p1: RecyclerView.ViewHolder, p2: RecyclerView.ViewHolder): Boolean {
