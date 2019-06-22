@@ -1,20 +1,52 @@
-package com.example.birdwatching
+package com.example.birdwatching.data
 
-import com.example.birdwatching.data.BirdsListDao
-import javax.inject.Inject
+import android.app.Application
+import android.arch.lifecycle.LiveData
+import android.os.AsyncTask
+import com.example.birdwatching.model.BirdsListItem
 
-class BirdRepository  @Inject constructor(private val birdDao: BirdsListDao) : BaseRepository<BirdsListItem>(){
-    override fun insert(t: BirdsListItem): Single<Long> = Single.fromCallable {
-        birdDao.insert(t)
+class BirdsRepository(application: Application) {
+    private var birdsDao: BirdsListDao
+    private var allBirds: LiveData<List<BirdsListItem>>
+
+    init {
+        val database: BirdsListRoomDatabase = BirdsListRoomDatabase.getInstance(
+            application.applicationContext
+        )!!
+        birdsDao = database.birdsListDao()
+        allBirds = birdsDao.getAllOrderByDateAsc()
     }
 
-    override fun delete(t: BirdsListItem): Completable = Completable.fromCallable {
-        birdDao.delete(t)
+    fun getAllBirdsAsc(): LiveData<List<BirdsListItem>> {
+        allBirds = birdsDao.getAllOrderByDateAsc()
+        return allBirds
     }
 
-    fun getAllBirds(): Single<List<BirdsListItem>> = Single.create<List<BookItem>> {
-        it.onSuccess(birdDao.getAllBooks())
+    fun getAllBirdsDesc(): LiveData<List<BirdsListItem>> {
+        allBirds = birdsDao.getAllOrderByDateDesc()
+        return allBirds
     }
 
+    fun insert(bird: BirdsListItem) {
+        val insertBirdAsyncTask = InsertBirdAsyncTask(birdsDao).execute(bird)
+    }
 
+    fun delete(id: Int) {
+        val deleteBirdAsyncTask = DeleteBirdAsyncTask(birdsDao).execute(id)
+    }
+
+    private class InsertBirdAsyncTask(birdDao: BirdsListDao) : AsyncTask<BirdsListItem, Unit, Unit>() {
+        val birdDao = birdDao
+        override fun doInBackground(vararg p0: BirdsListItem?) {
+            birdDao.insert(p0[0]!!)
+        }
+    }
+
+    private class DeleteBirdAsyncTask(birdDao: BirdsListDao) : AsyncTask<Int, Unit, Unit>() {
+        val birdDao = birdDao
+        override fun doInBackground(vararg p0: Int?) {
+            birdDao.delete(p0[0]!!)
+        }
+    }
 }
+

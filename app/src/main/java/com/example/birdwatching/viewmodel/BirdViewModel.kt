@@ -1,17 +1,24 @@
-package com.example.birdwatching
+package com.example.birdwatching.viewmodel
 
 import android.app.Application
+import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.ViewModel
-import com.example.birdwatching.data.BirdsListDao
 import com.example.birdwatching.model.BirdsListItem
-import javax.inject.Inject
+import com.example.birdwatching.data.BirdsRepository
 
+class BirdViewModel (application: Application): AndroidViewModel(application) {
+    private var repository: BirdsRepository = BirdsRepository(application)
+    private var allBirds: LiveData<List<BirdsListItem>> = repository.getAllBirdsDesc()
 
-class BirdViewModel (application: Application): ViewModel() {
+    fun insert(bird: BirdsListItem) {
+        repository.insert(bird)
+    }
 
-    @Inject
-    lateinit var birdDao : BirdsListDao
+    fun getAllBirds(): LiveData<List<BirdsListItem>> {
+        return allBirds
+    }
 
-    val birdItems: LiveData<List<BirdsListItem>> = birdDao.getAllOrderByDateAsc()
+    fun delete(id: Int) {
+        repository.delete(id)
+    }
 }
